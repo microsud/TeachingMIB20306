@@ -1,0 +1,103 @@
+ID,Name,ID_Name
+ibu00010,Glycolysis / Gluconeogenesis,ibu00010-Glycolysis / Gluconeogenesis
+ibu00020,Citrate cycle (TCA cycle) ,ibu00020-Citrate cycle (TCA cycle) 
+ibu00030,Pentose phosphate pathway ,ibu00030-Pentose phosphate pathway 
+ibu00040,Pentose and glucuronate interconversions ,ibu00040-Pentose and glucuronate interconversions 
+ibu00051,Fructose and mannose metabolism ,ibu00051-Fructose and mannose metabolism 
+ibu00052,Galactose metabolism ,ibu00052-Galactose metabolism 
+ibu00061,Fatty acid biosynthesis ,ibu00061-Fatty acid biosynthesis 
+ibu00071,Fatty acid degradation ,ibu00071-Fatty acid degradation 
+ibu00072,Synthesis and degradation of ketone bodies ,ibu00072-Synthesis and degradation of ketone bodies 
+ibu00190,Oxidative phosphorylation ,ibu00190-Oxidative phosphorylation 
+ibu00220,Arginine biosynthesis ,ibu00220-Arginine biosynthesis 
+ibu00230,Purine metabolism ,ibu00230-Purine metabolism 
+ibu00240,Pyrimidine metabolism ,ibu00240-Pyrimidine metabolism 
+ibu00250,"Alanine, aspartate and glutamate metabolism ","ibu00250-Alanine, aspartate and glutamate metabolism "
+ibu00260,"Glycine, serine and threonine metabolism ","ibu00260-Glycine, serine and threonine metabolism "
+ibu00261,Monobactam biosynthesis ,ibu00261-Monobactam biosynthesis 
+ibu00270,Cysteine and methionine metabolism ,ibu00270-Cysteine and methionine metabolism 
+ibu00280,"Valine, leucine and isoleucine degradation ","ibu00280-Valine, leucine and isoleucine degradation "
+ibu00281,Geraniol degradation ,ibu00281-Geraniol degradation 
+ibu00290,"Valine, leucine and isoleucine biosynthesis ","ibu00290-Valine, leucine and isoleucine biosynthesis "
+ibu00300,Lysine biosynthesis ,ibu00300-Lysine biosynthesis 
+ibu00310,Lysine degradation ,ibu00310-Lysine degradation 
+ibu00311,Penicillin and cephalosporin biosynthesis ,ibu00311-Penicillin and cephalosporin biosynthesis 
+ibu00330,Arginine and proline metabolism ,ibu00330-Arginine and proline metabolism 
+ibu00332,Carbapenem biosynthesis ,ibu00332-Carbapenem biosynthesis 
+ibu00340,Histidine metabolism ,ibu00340-Histidine metabolism 
+ibu00350,Tyrosine metabolism ,ibu00350-Tyrosine metabolism 
+ibu00360,Phenylalanine metabolism ,ibu00360-Phenylalanine metabolism 
+ibu00362,Benzoate degradation ,ibu00362-Benzoate degradation 
+ibu00380,Tryptophan metabolism ,ibu00380-Tryptophan metabolism 
+ibu00400,"Phenylalanine, tyrosine and tryptophan biosynthesis ","ibu00400-Phenylalanine, tyrosine and tryptophan biosynthesis "
+ibu00401,Novobiocin biosynthesis ,ibu00401-Novobiocin biosynthesis 
+ibu00410,beta-Alanine metabolism ,ibu00410-beta-Alanine metabolism 
+ibu00430,Taurine and hypotaurine metabolism ,ibu00430-Taurine and hypotaurine metabolism 
+ibu00440,Phosphonate and phosphinate metabolism ,ibu00440-Phosphonate and phosphinate metabolism 
+ibu00450,Selenocompound metabolism ,ibu00450-Selenocompound metabolism 
+ibu00460,Cyanoamino acid metabolism ,ibu00460-Cyanoamino acid metabolism 
+ibu00471,D-Glutamine and D-glutamate metabolism ,ibu00471-D-Glutamine and D-glutamate metabolism 
+ibu00473,D-Alanine metabolism ,ibu00473-D-Alanine metabolism 
+ibu00480,Glutathione metabolism ,ibu00480-Glutathione metabolism 
+ibu00500,Starch and sucrose metabolism ,ibu00500-Starch and sucrose metabolism 
+ibu00511,Other glycan degradation ,ibu00511-Other glycan degradation 
+ibu00514,Other types of O-glycan biosynthesis ,ibu00514-Other types of O-glycan biosynthesis 
+ibu00515,Mannose type O-glycan biosynthesis ,ibu00515-Mannose type O-glycan biosynthesis 
+ibu00520,Amino sugar and nucleotide sugar metabolism ,ibu00520-Amino sugar and nucleotide sugar metabolism 
+ibu00521,Streptomycin biosynthesis ,ibu00521-Streptomycin biosynthesis 
+ibu00524,"Neomycin, kanamycin and gentamicin biosynthesis ","ibu00524-Neomycin, kanamycin and gentamicin biosynthesis "
+ibu00550,Peptidoglycan biosynthesis ,ibu00550-Peptidoglycan biosynthesis 
+ibu00561,Glycerolipid metabolism ,ibu00561-Glycerolipid metabolism 
+ibu00564,Glycerophospholipid metabolism ,ibu00564-Glycerophospholipid metabolism 
+ibu00592,alpha-Linolenic acid metabolism ,ibu00592-alpha-Linolenic acid metabolism 
+ibu00600,Sphingolipid metabolism ,ibu00600-Sphingolipid metabolism 
+ibu00620,Pyruvate metabolism ,ibu00620-Pyruvate metabolism 
+ibu00625,Chloroalkane and chloroalkene degradation ,ibu00625-Chloroalkane and chloroalkene degradation 
+ibu00630,Glyoxylate and dicarboxylate metabolism ,ibu00630-Glyoxylate and dicarboxylate metabolism 
+ibu00633,Nitrotoluene degradation ,ibu00633-Nitrotoluene degradation 
+ibu00640,Propanoate metabolism ,ibu00640-Propanoate metabolism 
+ibu00650,Butanoate metabolism ,ibu00650-Butanoate metabolism 
+ibu00660,C5-Branched dibasic acid metabolism ,ibu00660-C5-Branched dibasic acid metabolism 
+ibu00670,One carbon pool by folate ,ibu00670-One carbon pool by folate 
+ibu00680,Methane metabolism ,ibu00680-Methane metabolism 
+ibu00730,Thiamine metabolism ,ibu00730-Thiamine metabolism 
+ibu00740,Riboflavin metabolism ,ibu00740-Riboflavin metabolism 
+ibu00750,Vitamin B6 metabolism ,ibu00750-Vitamin B6 metabolism 
+ibu00760,Nicotinate and nicotinamide metabolism ,ibu00760-Nicotinate and nicotinamide metabolism 
+ibu00770,Pantothenate and CoA biosynthesis ,ibu00770-Pantothenate and CoA biosynthesis 
+ibu00780,Biotin metabolism ,ibu00780-Biotin metabolism 
+ibu00790,Folate biosynthesis ,ibu00790-Folate biosynthesis 
+ibu00860,Porphyrin and chlorophyll metabolism ,ibu00860-Porphyrin and chlorophyll metabolism 
+ibu00900,Terpenoid backbone biosynthesis ,ibu00900-Terpenoid backbone biosynthesis 
+ibu00903,Limonene and pinene degradation ,ibu00903-Limonene and pinene degradation 
+ibu00910,Nitrogen metabolism ,ibu00910-Nitrogen metabolism 
+ibu00920,Sulfur metabolism ,ibu00920-Sulfur metabolism 
+ibu00970,Aminoacyl-tRNA biosynthesis ,ibu00970-Aminoacyl-tRNA biosynthesis 
+ibu01054,Nonribosomal peptide structures ,ibu01054-Nonribosomal peptide structures 
+ibu01100,Metabolic pathways ,ibu01100-Metabolic pathways 
+ibu01110,Biosynthesis of secondary metabolites ,ibu01110-Biosynthesis of secondary metabolites 
+ibu01120,Microbial metabolism in diverse environments ,ibu01120-Microbial metabolism in diverse environments 
+ibu01130,Biosynthesis of antibiotics ,ibu01130-Biosynthesis of antibiotics 
+ibu01200,Carbon metabolism ,ibu01200-Carbon metabolism 
+ibu01210,2-Oxocarboxylic acid metabolism ,ibu01210-2-Oxocarboxylic acid metabolism 
+ibu01212,Fatty acid metabolism ,ibu01212-Fatty acid metabolism 
+ibu01220,Degradation of aromatic compounds ,ibu01220-Degradation of aromatic compounds 
+ibu01230,Biosynthesis of amino acids ,ibu01230-Biosynthesis of amino acids 
+ibu01501,beta-Lactam resistance ,ibu01501-beta-Lactam resistance 
+ibu01502,Vancomycin resistance ,ibu01502-Vancomycin resistance 
+ibu01503,Cationic antimicrobial peptide (CAMP) resistance ,ibu01503-Cationic antimicrobial peptide (CAMP) resistance 
+ibu02010,ABC transporters ,ibu02010-ABC transporters 
+ibu02020,Two-component system ,ibu02020-Two-component system 
+ibu02024,Quorum sensing ,ibu02024-Quorum sensing 
+ibu02030,Bacterial chemotaxis ,ibu02030-Bacterial chemotaxis 
+ibu03010,Ribosome ,ibu03010-Ribosome 
+ibu03018,RNA degradation ,ibu03018-RNA degradation 
+ibu03020,RNA polymerase ,ibu03020-RNA polymerase 
+ibu03030,DNA replication ,ibu03030-DNA replication 
+ibu03060,Protein export ,ibu03060-Protein export 
+ibu03070,Bacterial secretion system ,ibu03070-Bacterial secretion system 
+ibu03410,Base excision repair ,ibu03410-Base excision repair 
+ibu03420,Nucleotide excision repair ,ibu03420-Nucleotide excision repair 
+ibu03430,Mismatch repair ,ibu03430-Mismatch repair 
+ibu03440,Homologous recombination ,ibu03440-Homologous recombination 
+ibu04122,Sulfur relay system,ibu04122-Sulfur relay system

@@ -1,0 +1,16 @@
+Sample,Bacterium,Timepoint,CopyNumerPerMilli
+ART0,Anaerostipes rhamnosivorans,T0,133394.5858
+EHT0,Eubacterium hallii,T0,57489.6066
+FPT0,Faecalibacterium prausnitzii,T0,819647.8458
+MIT0,Megsphaera indica,T0,809123.8496
+IBT0,Intestinimonas butyriciproducens,T0,42822.82063
+ART1,Anaerostipes rhamnosivorans,T24,442590496.2
+EHT1,Eubacterium hallii,T24,118472.465
+FPT1,Faecalibacterium prausnitzii,T24,574539711.8
+MIT1,Megsphaera indica,T24,164734865.8
+IBT1,Intestinimonas butyriciproducens,T24,69175183.95
+ART2,Anaerostipes rhamnosivorans,T48,270111236.8
+EHT2,Eubacterium hallii,T48,358606.2569
+FPT2,Faecalibacterium prausnitzii,T48,185069354.7
+MIT2,Megsphaera indica,T48,150540317.8
+IBT2,Intestinimonas butyriciproducens,T48,140270989.7
