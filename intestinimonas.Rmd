@@ -5,7 +5,7 @@ output:
   flexdashboard::flex_dashboard:
     orientation: columns
     vertical_layout: fill
-    source_code: https://github.com/microsud/microbiomeutilities
+    source_code: https://github.com/microsud/TeachingMIB20306
     theme: lumen
 ---
 
@@ -36,6 +36,7 @@ library(RColorBrewer)
 library(shiny)
 library(shinythemes)
 library(pheatmap)
+library(plotly)
 #library(metagenomeSeq)
 library(Biobase)
 library("EnrichmentBrowser")
@@ -45,6 +46,7 @@ library(tidyr)
 library(png)
 library(knitr)
 library(enrichplot)
+library("EnhancedVolcano")
 #library(ReactomePA)
 options(shiny.maxRequestSize = 30*1024^2) # 25mb limit
 
@@ -77,9 +79,9 @@ hr()
 tags$hr()
 
 # Example data
-actionButton("load_data", label = 'Load Example Data', width = "225px")
+actionButton("load_data", label = 'Click here to initiate analysis', width = "225px")
 
-h4('    ')
+h6('')
 tags$strong()
 
 h4('Experiment 3 ')
@@ -140,32 +142,36 @@ Column {data-width=1000} {.tabset .tabset-fade}
 -----------------------------------------------------------------------
 ### Experiment 3  
 
+
 ![Overview](www/microbiome_sm.jpg)
 
-### Protien Overlap   
+### Protein Overlap   
 
 Barplot of overlap of protein identifications between samples. Check how many proteins are detected in how many samples. Below we can see that maximum number of proteins are detected in all six samples.  
 
 ```{r}
 
-output$LibSizeHist <- renderPlot({
+output$LibSizeHist <- renderPlotly({
   
   validate(need(expr = !is.null(pseq()), message = "Please upload data..."))
   
   ps0 <- pseq()
   overlap <- plot_frequency(ps0)
-  return(overlap)
+  ggplotly(overlap)
 
-}, width = 400, height = 400)
+}
+#, width = 400, height = 400
+)
 
-fillPage(plotOutput("LibSizeHist"))
+fillPage(plotlyOutput("LibSizeHist"))
+#fillPage(plotOutput("LibSizeHist"))
 ```
 
 
 ### Pre-processing and QC  
 
 Quality control (QC) is critical step for any high throughput data driven approach such as proteomics, transcriptomics. Here we can filter the data to keep proteins that are detected in user defined number of replicates. Due to the technical limitation in measurements, there can be proteins detected in only one of the replicate and can have an influence in statistical comparisons between two groups, here, two different growth conditions. 
-We can test the influence of these thresholds on the number of proteins that can be used for analysis.
+We can test the influence of these thresholds on the number of proteins that can be used for analysis.  
 
 ```{r}
 
@@ -212,39 +218,57 @@ output$OTUHist_1 <- renderPlot({
 
 ``` 
 
-Note: In this step, Filter_missval filters the proteomics dataset based on missing values. The dataset is filtered for proteins that have a maximum of 'thr' missing values in at least one condition. This can help make the analysis stringent.
+Note 1: In this step, *Filter missing values* filters the proteomics dataset based on missing values. The dataset is filtered for proteins that have a maximum of 'thr' missing values in at least one condition. This can help make the analysis stringent.
 
+Note 2: The cut-offs used here will be the one used in **Differential Expression** tab later in the workflow. So make note of the values that you define here.  
 
 ### Principal Components Analysis    
-The PCA plot is a dimension reduction method used to identify over-arching properties of data. It is widely used for identifying similarities and differences betwwen samples e.g. Between replicates. 
+
+The PCA plot is a dimension reduction method used to identify over-arching properties of data. It is widely used for identifying similarities and differences between samples e.g. Between replicates. How dissimilar are the replicates in glucose condition or lysine condition? The two axis explain the variaince between points.    
+
+**Threshold for the adjusted P value**: Is the threshold for false discovery rate. This helps control false positives being considered significant. [Further reading](https://link.springer.com/protocol/10.1007%2F978-1-4939-3106-4_7)   
+
+**Threshold for the log2 fold change**: Is the measure of change compared to another condition. e.g. in lysine compared to glucose,  
+Protein A has 1000 counts in lysine and 10 counts in glucose condition.
+Lysine compared to Glucose: 1000/10 = 100 and log2(100) is ~6.6-fold higher in Lysine condition for expression of this protien.  A positive value indicates that the protein is present at higher abundance in the lysine conditions. Negative value indicate higher abundance in the glucose plus acetate condition.   
+Here Glucose is the initial condition and we compare expression in lysine compared to glucose.   
+
+**Number of top variable proteins to view**: How many top variable proteins at *Threshold for the adjusted P value* and with *Threshold for the log2 fold change* do we consider to check for replicability within the two conditions.  
+ 
 ```{r}
 
 fluidPage(
   titlePanel("PCA"),
   
   sidebarLayout(
-    
-  
-sidebarPanel(width = 3,  
+    sidebarPanel(width = 2,  column = 3,
+                 ## link the JS file
+                 tags$head(tags$script(src="script.js")),
+                 ## link the CSS file
+                 tags$head(tags$link(rel="stylesheet", 
+                                     type="text/css",
+                                     href="style.css")),
+                 
+                 numericInput(
+                   "alpha",
+                   label = "Threshold for the adjusted P value",0,
+                   min = 0, 
+                   max = 10),
+                 numericInput(
+                   "Lfc",
+                   label = "Threshold for the log2 fold change",0,
+                   min = 0, 
+                   max = 100),
+                 numericInput(
+                   "top_prot",
+                   label = "Number of top variable proteins to view",100,
+                   min = 10, 
+                   max = 100000)
+    ),
+    mainPanel(
+      plotlyOutput("PCA"))))
 
- numericInput(
-        "alpha",
-        label = "Threshold for the adjusted P value",0,
-       min = 0, 
-        max = 10),
- numericInput(
-        "Lfc",
-        label = "Threshold for the log2 fold change",0,
-       min = 0, 
-        max = 100),
- numericInput(
-        "top_prot",
-        label = "Number of top variable proteins to view",100,
-       min = 10, 
-        max = 100000)
-),
-
-output$PCA <- renderPlot({
+output$PCA <- renderPlotly({
   
   validate(need(expr = !is.null(pseq()), message = "Please upload data..."))
   
@@ -265,22 +289,23 @@ output$PCA <- renderPlot({
   
   p.pca <- plot_pca(dep, x = 1, y = 2, n = input$top_prot, point_size = 4,
                     label=F)
-
-  return(p.pca)
+  ggplotly(p.pca)
+  #return(p.pca)
+  #mainPanel(plotlyOutput("p.pca"))
   
-  
-  }, width = 600, height = 800)
+}
+#, width = 800, height = 600
+)
 
 
-))
-
+#))
 ``` 
 
- 
+
 
 ### Volcano plot      
 
-Volcano plots are routinely used to visualise results of differnet omics experiments. We can visualise  statistical significance (P value) versus magnitude of change (fold change) in protien expression. The one with large fold change may be the most interesting and biologically relavant proteins/genes. Here we label those protein that have atleast 1.0 fold change between conditions. The proteins upregulated in lysine condition are towards the right and downregulated genes are on the left.  
+Volcano plots are routinely used to visualise results of differnet -omics experiments. We can visualise  statistical significance (P value) versus magnitude of change (fold change) in protien expression. The one with large fold change may be the most interesting and biologically relavant proteins/genes. Here we label those protein that have atleast 1.0 fold change between conditions. The proteins upregulated in lysine condition are towards the right and downregulated genes are on the left.  
 
 Check for locus tags in this plot with the table in tab called Differential Expression
 
@@ -352,7 +377,6 @@ output$Volcano <- renderPlot({
   }, width = 1100, height = 700)
 
 
-
 ``` 
 
 
@@ -360,6 +384,7 @@ output$Volcano <- renderPlot({
 
 Differential enrichment test based on protein-wise linear models and empirical Bayes statistics using [limma](https://academic.oup.com/nar/article/43/7/e47/2414268). Here, we test the the null hypothesis that there is no difference in the protien expression between glucose plus acetate and lysine condition. 
 
+Note: The exact calulation steps are out of scope for this experiment, if interested students are encouraged to read more about [limma](https://academic.oup.com/nar/article/43/7/e47/2414268). For this Bachelor course, we are interested in understanding the simple biological questions using these standard approaches.  
 ```{r}
 
 
@@ -381,7 +406,9 @@ output$Table <- renderDataTable({
   dep <- add_rejections(data_diff_all_contrasts, alpha = input$alpha, lfc = input$Lfc)
   data_results <- get_results(dep)
   df_wide <- get_df_wide(dep)
+  write.csv(data_results, "data_results.csv")
   return(data_results)
+  
   
 },extensions = c('Buttons'), 
   options = list(  # options
@@ -397,28 +424,30 @@ output$Table <- renderDataTable({
 fillPage(dataTableOutput("Table"))
 ```
 
+
 ### Heatmap  
 
 ```{r}
 
-fluidPage(titlePanel("Heatmap of protiens with variable expression"),
+fluidPage(
+  titlePanel("Heatmap"),
   
-  sidebarLayout(
+  sidebarLayout(sidebarPanel(width = 2,  
   
-sidebarPanel(width = 2,  
-
- numericInput(
-        "TopVar",
-        label = "Top Proteins",10, 
-        min = 5, 
-       max = 1000)),
+  numericInput(
+  "TopVar",
+  label = "Top Proteins",
+  10,
+  min = 5,
+  max = 1000
+  )
+  ),
 mainPanel(
             plotOutput('Heatmap')
         )))
 
 
-  output$Heatmap <- renderPlot({
-  
+output$Heatmap <- renderPlot({
   validate(need(expr = !is.null(pseq()), message = "Please upload data..."))
   
   ps0 <- pseq()
@@ -434,36 +463,38 @@ mainPanel(
   # Test all possible comparisons of samples
   data_diff_all_contrasts <- test_diff(data_imp, type = "all")
   
-  dep <- add_rejections(data_diff_all_contrasts, alpha = input$alpha, lfc = input$Lfc)
+  dep <-
+  add_rejections(data_diff_all_contrasts,
+  alpha = input$alpha,
+  lfc = input$Lfc)
   
-  topVarGenes <- head(order(-rowVars(assay(dep))),input$TopVar)
-  mat <- assay(dep)[ topVarGenes, ]
+  topVarGenes <- head(order(-rowVars(assay(dep))), input$TopVar)
+  mat <- assay(dep)[topVarGenes,]
   mat <- mat - rowMeans(mat)
-  df <- as.data.frame(colData(dep)[,c("Condition","ID")])
-  p.het <- pheatmap(mat, annotation_col=df)
-
-
+  df <- as.data.frame(colData(dep)[, c("Condition", "ID")])
+  #pheatmap(mat, annotation_col = df)
+  var_prot <- paste0("Top ", input$TopVar, " variable proteins")
+  return(pheatmap(mat, annotation_col = df, main = var_prot))
+  
   #p.het <- plot_heatmap(dep, type = "centered", show_row_names = T,
-   #          kmeans = F, show_row_dend = F,
-    #         indicate = c("condition", "replicate"),
-     #        plot = TRUE,
-      #       row_font_size = 2)
-  #p.glu_vs_lysine <- plot_volcano_custom(dep, contrast = "Glucose.plus.Acetate_vs_Lysine", 
+  #          kmeans = F, show_row_dend = F,
+  #         indicate = c("condition", "replicate"),
+  #        plot = TRUE,
+  #       row_font_size = 2)
+  #p.glu_vs_lysine <- plot_volcano_custom(dep, contrast = "Glucose.plus.Acetate_vs_Lysine",
   #
-  #                                label_size = 2, 
-  #                               add_names = TRUE) 
+  #                                label_size = 2,
+  #                               add_names = TRUE)
   #return(p.glu_vs_lysine)
+  }, height = 700, width = 700
+  )
   
-  
- 
-  return(p.het)
-  
-  }, height = 700, width = 700)
-
-
 ```
 
 ### KEGG Pathway IDs-Names  
+
+Use this table to check for pathway IDs for metabolic pathways of interest. for. e.g check the KEGG Pathway IDs-Name for Butanoate metabolism.  
+The boxes colored in green are detected in proteomics data. The boxes colored in red are differentailly expressed in lysine condition.  
 ```{r}
 
 choices =   data <- read.csv("data/kegg_pathway_list.csv", 
@@ -485,60 +516,10 @@ fillPage(dataTableOutput('Table2'))
 ```
 
 
-### KEGG Module Enrichment Analysis  
 
-```{r}
+### KEGG Pathway Anlaysis  
 
-output$plotEnrichNet <- renderPlot({
-      validate(need(expr = !is.null(pseq()), message = "Please upload data..."))
-  
-     ps0 <- pseq()
-     data_filt <- filter_missval(ps0, thr = input$Filter_missval_Thres)
-     data_norm <- normalize_vsn(data_filt)
-    set.seed(2156)
-  # All possible imputation methods are printed in an error, if an invalid function name is given.
-  # Impute missing data using random draws from a Gaussian distribution centered around a minimal value (for MNAR)
-    data_imp <- impute(data_norm, fun = "MinProb", q = 0.01)
-  
-  # Differential enrichment analysis  based on linear models and empherical Bayes statistics
-  
-  # Test all possible comparisons of samples
-  data_diff_all_contrasts <- test_diff(data_imp, type = "all")
-  
-  dep <- add_rejections(data_diff_all_contrasts, alpha = input$alpha, lfc = input$Lfc)
-  data_results <- get_results(dep)
-  df_wide <- get_df_wide(dep)
-  
-  foldchanges.view = data_results$Lysine_centered
-  names(foldchanges.view) = data_results$name
-  gene <- names(foldchanges.view)[abs(foldchanges.view) > 1.0]
-  
-  
-    kk <- enrichKEGG(gene         = gene,
-                 organism     = 'ibu',
-                 pvalueCutoff = 0.05,
-                 pAdjustMethod = "none",
-                 minGSSize = 5)
-    
-#    p.net <- cnetplot(kk, categorySize="pvalue", showCategory = 20, foldChange=gene, 
-#                      vertex.label.font=6,
-#                      circular = F, colorEdge = T)
-  
-  p.net <- cnetplot(kk, foldChange=foldchanges.view, 
-                    showCategory = 20,
-                    circular = FALSE)
-  
-  return(p.net)
-  
-    })
-
-
-fillPage(plotOutput("plotEnrichNet"))
-
-```
-
-
-### KEGG Pathway Anlaysis
+KEGG pathway analysis is a powerful approach to identify gene/protien expression and thier differences between conditions.  
 
 ```{r}
 
@@ -636,32 +617,37 @@ In this experiment, we grew **five** common human gut bacteria.
 ```
 
 
-### Co-existence stratergies    
+### Co-existence strategies    
 
 <h>
 <div style="text-align: center"><img src="www/syntheticcommunity.JPG" width="1000" /></div>
 
-Bacteria are grow as members of community in natural ecosystems. Investigating physiology of individual bacteria can provide clues as to what are possible growth stratergies employed by specific bacteria in its natural surrounding. However, to test weather the bacteria can really compete for substrates and survive we need to test their growth in presence of other organisms they are likley to share the resources. We can test for fitness of bacteria by  
+Bacteria are grow as members of community in natural ecosystems. Investigating physiology of individual bacteria can provide clues as to what are possible growth stratergies employed by specific bacteria in its natural surrounding. However, to test weather the bacteria can really compete for substrates and survive we need to test their growth in presence of other organisms they are likley to share the resources. We can test for fitness of bacteria by growing them together in controlled consitions.    
 
+Then we can quantify the abundance of each species using species specific molecular markers. Here, we use 16S rRNA gene as a molecular marker. We designed specific probes and did qPCR (quantitative polymerase chain reaction) anlaysis. [Example here of how we can do this](https://www.biorxiv.org/content/10.1101/336362v1.full)    
 
 
 ```{r}
 
-output$CoPlot <- renderPlot({
-  
-  data.mix <- read.csv("data/qpcr_coculture.csv", 
-                   header = T, 
-                   row.names = 1)
-    p.co <- ggpubr::ggline(data.mix, "Timepoint", "CopyNumerPerMilli", 
-                           color= "Bacterium", legend="right", palette = "Set2",
-                           ylab = "Copy numbers/ml")
-    return(p.co)
+output$CoPlot <- renderPlotly({
+  data.mix <- read.csv("data/qpcr_coculture.csv",
+                       header = T,
+                       row.names = 1)
+                       
+                       p.co <- ggpubr::ggline(
+                       data.mix,
+                       "Timepoint",
+                       "CopyNumerPerMilli",
+                       color = "Bacterium",
+                       legend = "right",
+                       palette = "Set2",
+                       ylab = "Copy numbers/ml",
+                       size = 3
+                       )
+   ggplotly(p.co)
+})
 
-}, width = 800, height = 400)
-
-
-
-fillPage(plotOutput("CoPlot"))
+fillPage(plotlyOutput("CoPlot"))
 
 ``` 
 
@@ -670,6 +656,41 @@ fillPage(plotOutput("CoPlot"))
 
 LEARNING OBJECTIVES
 =======================================================================
+Sidebar {.sidebar}
+-----------------------------------------------------------------------
+```{r upload 2}
+
+# Proteome table
+h3("MIB20306 - PRACTICAL 2019")
+hr()
+img(src="www/WUR_LOGO.png",height=100,width=200)
+h6('image source google images')
+hr()
+h5("This is an interactive Shiny application to visualize and analyze proteomics data")
+hr()
+
+tags$hr()
+
+h6('')
+tags$strong()
+
+h4('Experiment 3 ')
+tags$strong()
+
+h5('Genome-guided elucidation of the physiology of the human gut bacterium Intestinimonas butyriciproducens')
+tags$strong()
+
+h6('contact: sudarshan.shetty@wur.nl')
+tags$strong()
+
+h5('For educational purpose only')  
+tags$strong()
+
+```
+
+Column {data-width=1000} {.tabset .tabset-fade}
+-----------------------------------------------------------------------
+### Experiment 3  
 
 To integrate genomics, proteomics, and metabolomics to better understand the physiology of a bacterium.  
 
