@@ -597,18 +597,7 @@ Bacteria grow as members of community in natural ecosystems. Investigating physi
 <h>
 <div style="text-align: center"><img src="www/microbialinteractions.png" width="500" /></div>
 
-In this experiment, we grew **five** common human gut bacteria.  
-*Faecalibacterium prausnitzii*, gram negative anaerobe that is abundantly present in the healthy human microbiota. It can produce butyrate via butyryl-coA: acetate CoA-transferase when grown on acetate. It has been reported that this species is also able to grow with low concentrations of oxygen in the presence of reduced compounds and riboflavin [Louis, P., & Flint, H. J. 2016](https://doi.org/10.1111/1462-2920.13589).This bacterium may make a significant contribution to D-lactate and butyrate formation in the large intestine [Lopez-Siles, T. K., et al., 2012](https://aem.asm.org/content/78/2/420).  
 
-*Intestinimonas butyriciproducens*, gram-positive and strictly anaerobic bacterium. It synthesizes butyrate by the fermentation of glucose and lysine. It can also use fructoselysine as carbon source to produce butyrate [Bui, T. P. N., et al. 2016](https://doi.org/10.1111/1758-2229.12483).  
-
-*Anaerostipes rhamnosivorans*, gram variable, strictly anaerobic bacterium. It can produce butyrate from glucose as well as from acetate plus lactate.2 Additionally, it has been reported that it can ferment glucose into butyrate, lactate, formate and acetate as main products [Bui, T. P. N., et al. 2014](https://ijs.microbiologyresearch.org/content/journal/ijsem/10.1099/ijs.0.055061-0#tab2).    
-
-*Megasphaera indica* is an obligate anaerobe and a gram-negative bacterium. It can utilize a broad range of carbohydrates as source of carbon and energy [Lanjekar, V. B., et al. 2014](https://ijs.microbiologyresearch.org/content/journal/ijsem/10.1099/ijs.0.059816-0#tab2).  
-
-*Eubacterium hallii* is a gram-positive and strictly anaerobic bacterium which represents 2 to 3 % of the human fecal community. It can produce butyrate as a main product when grown in glucose and lactate. In the absence of glucose, *E. hallii* can completely convert acetate and lactate to butyrate. It has been observed that *E. hallii* is especially abundant in the colonic ecosystem which suggests that these bacteria play an important role in preventing lactate accumulation [Shetty S.A., et al. 2018](https://ijs.microbiologyresearch.org/content/journal/ijsem/10.1099/ijsem.0.003041#tab2).  
-
- 
 <h>
 <div style="text-align: center"><img src="www/SubstratesBacteria.JPG" width="500" /></div>
  
