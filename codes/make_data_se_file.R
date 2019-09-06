@@ -17,12 +17,12 @@ make_data_sefile <- function(proteomeData = NULL, SampleData = NULL){
   LFQ_columns <- grep("LFQ.", colnames(data)) 
   #rownames(sam_dat)
   #data$id
-  # Focus here on Anaerobutyricum soehngenii strain L2-7
+  # Focus here on Intestinimonas
   # Make data compatible with DEP package
-  sam_dat.l2 <- subset(sam_dat, Organism == "L2-7")
+  sam_dat.l2 <- subset(sam_dat, Organism == "IB211")
   experimental_design <- sam_dat.l2
   
-  data$Gene.names <- gsub("EHL_","EHLA_", data$Gene.names)
+  data$Gene.names <- gsub("IB211_","IB211_", data$Gene.names)
   data <- tidyr::separate(data, Gene.names, c("Gene.names", "Product name"), sep = " ", remove = TRUE)
   
   data_unique <- make_unique(data, "Gene.names", "Fasta.headers", delim = ";")
