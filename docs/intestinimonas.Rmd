@@ -43,16 +43,12 @@ library("EnrichmentBrowser")
 library(plotly)
 library(gage)
 library(tidyr)
-library(dplyr)
 library(png)
 library(knitr)
 library(enrichplot)
 library("EnhancedVolcano")
 library(reshape2)
-library("pathview")
 #library(ReactomePA)
-library("filesstrings")
-#library("shinycssloaders")
 options(shiny.maxRequestSize = 30*1024^2) # 25mb limit
 
 av = function(x){
@@ -147,7 +143,7 @@ Column {data-width=1000} {.tabset .tabset-fade}
 -----------------------------------------------------------------------
 ### Overview of Experiment 3  
 
-*I. butyriciproducens* cells were inoculated in three anaerobic bottles containing Glucose plus Acetate and in another three anaerobic bottles containing Lysine as sole carbon source. Cells were harvested at late exponential phase, centrifuged to obtain a cell pellet. The cell pellet was subjected to protein extraction procedure.  
+*I. butyriciproducens* cells were inoculated in three anaerobic bottles containing Glucose plus Acetate and in another three anaerobic bottles containing Lysine as sole carbon source. Cells were harvested at late exponenetial phase, centrifuged to obtain a cell pellet. The cell pellet was subjected to protein extraction procedure.  
 
 ![Overview](www/microbiome_sm.jpg)
 
@@ -168,11 +164,11 @@ output$LibSizeHist <- renderPlotly({
   overlap.fil.sub <- subset(overlap.fil, Var1!=0)
   
   p <- ggplot(overlap.fil.sub, aes(x = Var1, y = Freq, fill = Var1)) + 
-  geom_col() + scale_fill_grey(start = 0.8, end = 0.2) + theme_DEP2() + theme(legend.position = "none")
+  geom_col() + scale_fill_grey(start = 0.8, end = 0.2) + 
+  labs(title = "Protein identifications overlap", x = "Identified in number of samples", 
+       y = "Number of proteins") + theme_DEP2() + theme(legend.position = "none")
   
-  plotly::ggplotly(p+ labs(title = "Protein identifications overlap", 
-                           x = "Identified in number of samples", 
-                           y = "Number of proteins"), height = 400, width=700)
+  plotly::ggplotly(p)
 
 }
 #, width = 400, height = 400
@@ -191,7 +187,7 @@ Based on experience, it is normally found that proteins missing in two of the re
 The two groups in this example represent two different growth conditions; a culture grown with glucose and acetate added, and another culture grown with lysine added. We can change the filter thresholds to test the influence they have on the number of proteins that can be kept and used for further analysis.    
 
 
-*The missing values can result from very low abundance i.e. below or boderline of the limit of detection for the instrument, misidentification/ambiguous matching where the same peptide matches to multiple proteins sequences and several other reasons related to sampple processing, protein size, location (cell wall or cytoplasmic), etc. [Further reading Lazar et al., J. Proteome Res.2016](https://pubs.acs.org/doi/10.1021/acs.jproteome.5b00981).  
+*The missing values can result from very low abundance i.e. below or boderline of the limit of detection for the instrument, misidentification/ambiguous matching where same petide matches to multiple proteins sequences and several other reasons related to sampple processing, protein size, location (cell wall or cytoplsmic), etc. [Further reading Lazar et al., J. Proteome Res.2016](https://pubs.acs.org/doi/10.1021/acs.jproteome.5b00981).  
 
 ```{r}
 
@@ -202,8 +198,8 @@ fluidPage(
     
   
 sidebarPanel(
-helpText("Below set the threshold for allowing 
-                          missing values in replicates within the conditions being compared."),
+  helpText("Sets the threshold for the 
+              missing values in at least one condition."),
   
   width = 4, column = 3,
 
@@ -264,11 +260,9 @@ fluidPage(
                                      href="style.css")),
                  numericInput(
                    "top_prot",
-                   label = "Number of most abundant proteins to view",100,
+                   label = "Number of top proteins to view",100,
                    min = 10, 
                    max = 100000),
-                 helpText("Below set the threshold for allowing 
-                          missing values in replicates within the conditions being compared."),
                  numericInput(
                    "Filter_missval",
                    label = "Missing value threshold",0,
@@ -299,7 +293,7 @@ output$PCA <- renderPlotly({
   
   p.pca <- plot_pca(dep, x = 1, y = 2, n = input$top_prot, point_size = 4,
                     label=F)
-  p.pca<- p.pca + theme(legend.title = element_blank()) + ggtitle(paste0("PCA plot - ", input$top_prot, " most abundant proteins"))
+  p.pca<- p.pca + theme( legend.title = element_blank() )
   ggplotly(p.pca)
   #return(p.pca)
   #mainPanel(plotlyOutput("p.pca"))
@@ -347,9 +341,6 @@ fluidPage(titlePanel("Volcano plot showing differential expression"),
                    min = 0, 
                    max = 50,
                    step= 0.1),
-                 
-                 helpText("Below set the threshold for allowing 
-                          missing values in replicates within the conditions being compared."),
                  numericInput(
                    "Filter_missval2",
                    label = "Missing value threshold",0,
@@ -576,25 +567,21 @@ output$Table2 <- renderDT({
       scrollY = "400px",
       stateSave = FALSE
 ))
-
-# Reactive values to store imported data
-
+  
+  
 fillPage(dataTableOutput('Table2'))
   
 ```
+
 
 
 ### KEGG Pathway Anlaysis  
 
 KEGG pathway analysis is a powerful approach to identify gene/protien expression and thier differences between conditions.   
 
-Note 1: The boxes colored in green are present in the genome. The boxes coloured in red are differentially expresse. Check for thier locus tags and search in **Differential Expression** to see in which condition they are high or low in expression.  
+Note: The boxes colored in green are present in the genome. The boxes coloured in red are differentially expresse. Check for thier locus tags and search in **Differential Expression** to see in which condition they are high or low in expression.  
 
-Note 2: Top right of the image is key showing the gradient of color from <b> <font color="red">RED</font></b> to <b><font color="#ffa500">YELLOW</font></b> to <b><font color="steelblue">BLUE</font></b>. 
-<b><font color="red">RED</font></b> indicates high expression (fold induction) in Glucose plus acetate condition and <b><font color="steelblue">BLUE</font></b> indicates high expression (fold induction) in Lysine condition. The <b><font color="#ffa500">YELLOW</font></b> color signifies no difference in expression between the two growth conditions.     
-
-Please wait for the image to be mapped and viewed in the browser.  
-
+A new tab in a new browser will open with specified KEG pathway.  
 
 ```{r}
 
@@ -611,25 +598,23 @@ mylist <- rownames(choices)
 
 #browseKEGG(kk, 'ibu00650')
 fluidPage(
-        headerPanel('Path Analysis'),
+        headerPanel('Pathview'),
         sidebarPanel(
-            selectInput('Select', label = h3("Pathway"), choices = mylist, selected = NA)
+            selectInput('Select', label = h3("Pathway"), choices = mylist, selected = NULL)
         ),
         mainPanel(
-            imageOutput('plot1')
+            plotOutput('plot1')
         ),
 
 output$plot1 <- renderImage({
-  
-  validate(need(expr = !is.null(pseq()), message = "Please upload data..."))  
-  
-  ps0 <- pseq()
-  data_filt <- filter_missval(ps0, thr = input$Filter_missval_Thres)
-  data_norm <- normalize_vsn(data_filt)
-  set.seed(2156)
+          validate(need(expr = !is.null(pseq()), message = "Please upload data..."))  
+    ps0 <- pseq()
+    data_filt <- filter_missval(ps0, thr = input$Filter_missval_Thres)
+    data_norm <- normalize_vsn(data_filt)
+    set.seed(2156)
   # All possible imputation methods are printed in an error, if an invalid function name is given.
   # Impute missing data using random draws from a Gaussian distribution centered around a minimal value (for MNAR)
-  data_imp <- impute(data_norm, fun = "MinProb", q = 0.01)
+    data_imp <- impute(data_norm, fun = "MinProb", q = 0.01)
   
   # Differential enrichment analysis  based on linear models and empherical Bayes statistics
   
@@ -638,34 +623,17 @@ output$plot1 <- renderImage({
   
   dep <- add_rejections(data_diff_all_contrasts, alpha = input$alpha, lfc = input$Lfc)
   data_results <- get_results(dep)
-  #df_wide <- get_df_wide(dep)
+  df_wide <- get_df_wide(dep)
   
   foldchanges.view = data_results$Lysine_centered
   names(foldchanges.view) = data_results$name
-  #gene <- names(foldchanges.view)[abs(foldchanges.view) > 1.5]
-  #kk <- enrichKEGG(gene         = gene,
-  #                 organism     = 'ibu',
-  #                 pvalueCutoff = 0.05,
-  #                 pAdjustMethod = "none",
-  #                 minGSSize = 5)
-  
-  id.select <- gsub("ibu","",input$Select) 
-  
-  outfilepng <- paste0("kegg_maps_out/","ibu", id.select, '.pathview.png')
-  
-  p <- pathview(gene.data = foldchanges.view, 
-                pathway.id = id.select, 
-                gene.idtype = "KEGG",
-                species = "ibu", 
-                #out.suffix="kegg",
-                kegg.native=T,
-                limit      = list(gene=max(abs(foldchanges.view)), cpd=1),
-                same.layer=T,
-                low = "#d73027", mid = "#fee090", high = "#4575b4",
-                kegg.dir = "kegg_maps")
-  
-  showNotification("Rendering the pathway map, please wait...", type = "message")
-  #browseKEGG(kk, input$Select)
+  gene <- names(foldchanges.view)[abs(foldchanges.view) > 1.5]
+  kk <- enrichKEGG(gene         = gene,
+                 organism     = 'ibu',
+                 pvalueCutoff = 0.05,
+                 pAdjustMethod = "none",
+                 minGSSize = 5)
+  browseKEGG(kk, input$Select)
   #pathview::pathview(gene.data = gene, 
    #      pathway.id = input$Select, 
     #     gene.idtype = "REFSEQ",
@@ -675,20 +643,73 @@ output$plot1 <- renderImage({
         #          same.layer=T
          #)
   
- file.move(paste0("ibu", id.select, '.pathview.png', sep=''), "kegg_maps_out", 
-           overwrite = TRUE )
- 
- #outfilepng <- paste0("kegg_maps_out/","ibu", id.select, '.pathview.png')
- 
-  #pngpath <- paste0("ibu", id.select, '.pathview.png', sep='')
- #pngpath
-  list(src =outfilepng)
   
         }, deleteFile = FALSE))
-
+    
 
 ```
 
 
 
+### Synthetic Community  
+
+<h>
+Bacteria grow as members of community in natural ecosystems. Investigating physiology of individual bacteria can provide clues as to what are possible growth stratergies employed by specific bacteria in its natural surrounding. However, to test weather the bacteria can really compete for substrates and survive we need to test their growth in presence of other organisms they are likley to share the resources. We can test for this by creating synthetic communities [Shetty S.A., et al. 2019](https://www.sciencedirect.com/science/article/pii/S0958166918302301). These communities consists of specific known species which have been studied individually as mono-cultures to identify thier ability to utilize and produce different substrated and products respectively. 
+
+<h>
+<div style="text-align: center"><img src="www/microbialinteractions.png" width="500" /></div>
+
+In this experiment, we grew **five** common human gut bacteria.  
+*Faecalibacterium prausnitzii*, gram negative anaerobe that is abundantly present in the healthy human microbiota. It can produce butyrate via butyryl-coA: acetate CoA-transferase when grown on acetate. It has been reported that this species is also able to grow with low concentrations of oxygen in the presence of reduced compounds and riboflavin [Louis, P., & Flint, H. J. 2016](https://doi.org/10.1111/1462-2920.13589).This bacterium may make a significant contribution to D-lactate and butyrate formation in the large intestine [Lopez-Siles, T. K., et al., 2012](https://aem.asm.org/content/78/2/420).  
+
+*Intestinimonas butyriciproducens*, gram-positive and strictly anaerobic bacterium. It synthesizes butyrate by the fermentation of glucose and lysine. It can also use fructoselysine as carbon source to produce butyrate [Bui, T. P. N., et al. 2016](https://doi.org/10.1111/1758-2229.12483).  
+
+*Anaerostipes rhamnosivorans*, gram variable, strictly anaerobic bacterium. It can produce butyrate from glucose as well as from acetate plus lactate.2 Additionally, it has been reported that it can ferment glucose into butyrate, lactate, formate and acetate as main products [Bui, T. P. N., et al. 2014](https://ijs.microbiologyresearch.org/content/journal/ijsem/10.1099/ijs.0.055061-0#tab2).    
+
+*Megasphaera indica* is an obligate anaerobe and a gram-negative bacterium. It can utilize a broad range of carbohydrates as source of carbon and energy [Lanjekar, V. B., et al. 2014](https://ijs.microbiologyresearch.org/content/journal/ijsem/10.1099/ijs.0.059816-0#tab2).  
+
+*Eubacterium hallii* is a gram-positive and strictly anaerobic bacterium which represents 2 to 3 % of the human fecal community. It can produce butyrate as a main product when grown in glucose and lactate. In the absence of glucose, *E. hallii* can completely convert acetate and lactate to butyrate. It has been observed that *E. hallii* is especially abundant in the colonic ecosystem which suggests that these bacteria play an important role in preventing lactate accumulation [Shetty S.A., et al. 2018](https://ijs.microbiologyresearch.org/content/journal/ijsem/10.1099/ijsem.0.003041#tab2).  
+
+ 
+<h>
+<div style="text-align: center"><img src="www/SubstratesBacteria.JPG" width="500" /></div>
+ 
+```{r}
+#![substrates](www/SubstratesBacteria.JPG)
+```
+
+
+### Co-existence Strategies    
+
+<h>
+<div style="text-align: center"><img src="www/syntheticcommunity.JPG" width="1000" /></div>
+
+Bacteria are grow as members of community in natural ecosystems. Investigating physiology of individual bacteria can provide clues as to what are possible growth stratergies employed by specific bacteria in its natural surrounding. However, to test weather the bacteria can really compete for substrates and survive we need to test their growth in presence of other organisms they are likley to share the resources. We can test for fitness of bacteria by growing them together in controlled consitions.    
+
+Then we can quantify the abundance of each species using species specific molecular markers. Here, we use 16S rRNA gene as a molecular marker. We designed specific probes and did qPCR (quantitative polymerase chain reaction) anlaysis. [Example here of how we can do this](https://www.biorxiv.org/content/10.1101/336362v1.full)    
+
+
+```{r}
+
+output$CoPlot <- renderPlotly({
+  data.mix <- read.csv("data/qpcr_coculture.csv",
+                       header = T,
+                       row.names = 1)
+                       
+                       p.co <- ggpubr::ggline(
+                       data.mix,
+                       "Timepoint",
+                       "CopyNumerPerMilli",
+                       color = "Bacterium",
+                       legend = "right",
+                       palette = "Set2",
+                       ylab = "Copy numbers/ml",
+                       size = 3
+                       )
+   ggplotly(p.co)
+})
+
+fillPage(plotlyOutput("CoPlot"))
+
+``` 
 

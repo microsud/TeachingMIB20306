@@ -23,8 +23,10 @@ setup_proteome_shiny <- function(){
               "plyr", 
               "dplyr",
               "formatR",
-              "plotly"
-              )
+              "plotly",
+              "stringi",
+              "filesstrings",
+              "shinycssloaders")
 
 .bioc_packages <- c("DEP",
                     "pathview", 
@@ -33,7 +35,8 @@ setup_proteome_shiny <- function(){
                     "Biobase",
                     "EnrichmentBrowser",
                     "enrichplot",
-                    "EnhancedVolcano")
+                    "EnhancedVolcano",
+                    "gage")
 
 # Install CRAN packages (if not already installed)
 .inst <- .packages %in% installed.packages()
@@ -45,6 +48,7 @@ if(any(!.inst)) {
     install.packages("BiocManager")
   BiocManager::install(.bioc_packages[!.inst])
 }
+
 message("If there was no error then you are ready to do proteome data analysis")
 }
 
