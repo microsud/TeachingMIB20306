@@ -53,7 +53,7 @@ library("pathview")
 #library(ReactomePA)
 library("filesstrings")
 #library("shinycssloaders")
-options(shiny.maxRequestSize = 30*1024^2) # 25mb limit
+options(shiny.maxRequestSize = 30*1024^2) # 30mb limit
 
 av = function(x){
   if( isTRUE(all.equal(x, "")) | isTRUE(all.equal(x, "NULL")) ){
@@ -209,7 +209,7 @@ helpText("Below set the threshold for allowing
 
  numericInput(
         "Filter_missval_Thres",
-        label = "Threshold",0,
+        label = "Missing value threshold",0,
        min = 0, 
         max = 10)
 ),
@@ -454,8 +454,8 @@ output$Table <- DT::renderDataTable({
     "Glucose plus Acetate vs Lysine p.adj",
     "significant",
     "Glucose.plus Acetate vs Lysine significant",
-    "Glucose plus Acetate centered",
-    "Lysine centered"
+    "Glucose plus Acetate log2 FC",
+    "Lysine log2 FC"
     )
     data_results.sub2 <- data_results.sub
     
