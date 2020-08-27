@@ -1,2 +1,2 @@
-KEGG MAPS for Intestinimonas butyriciproducens https://www.kegg.jp/kegg-bin/show_organism?menu_type=pathway_maps&org=ibu 
+KEGG MAPS for _Intestinimonas butyriciproducens_ Source of data: KEGG https://www.genome.jp/dbget-bin/www_bget?gn:T04182
 Obtained using [pathview R package](https://www.bioconductor.org/packages/release/bioc/html/pathview.html)
