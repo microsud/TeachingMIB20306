@@ -527,7 +527,7 @@ output$Heatmap <- renderPlot({
   validate(need(expr = !is.null(pseq()), message = "Please upload data..."))
   
   ps0 <- pseq()
-  data_filt <- filter_missval(ps0, thr = input$Filter_missval)
+  data_filt <- filter_missval(ps0, thr = input$Filter_missval2)
   data_norm <- normalize_vsn(data_filt)
   set.seed(2156)
   # All possible imputation methods are printed in an error, if an invalid function name is given.
@@ -591,7 +591,9 @@ KEGG pathway analysis is a powerful approach to identify gene/protien expression
 Note 1: The boxes colored in green are present in the genome. The boxes coloured in red are differentially expresse. Check for thier locus tags and search in **Differential Expression** to see in which condition they are high or low in expression.  
 
 Note 2: Top right of the image is key showing the gradient of color from <b> <font color="red">RED</font></b> to <b><font color="#ffa500">YELLOW</font></b> to <b><font color="steelblue">BLUE</font></b>. 
-<b><font color="red">RED</font></b> indicates high expression (fold induction) in Glucose plus acetate condition and <b><font color="steelblue">BLUE</font></b> indicates high expression (fold induction) in Lysine condition. The <b><font color="#ffa500">YELLOW</font></b> color signifies no difference in expression between the two growth conditions.     
+<b><font color="red">RED</font></b> indicates high expression (fold induction) in Glucose plus acetate condition and <b><font color="steelblue">BLUE</font></b> indicates high expression (fold induction) in Lysine condition. The <b><font color="#ffa500">YELLOW</font></b> color signifies no difference in expression between the two growth conditions.    
+
+For your reference, the KEGG pathway based on genomic data only can be found here: [*Intestinimonas butyriciproducens* AF211](https://www.genome.jp/dbget-bin/www_bget?gn:T04182)  
 
 Please wait for the image to be mapped and viewed in the browser.  
 
@@ -611,7 +613,7 @@ mylist <- rownames(choices)
 
 #browseKEGG(kk, 'ibu00650')
 fluidPage(
-        headerPanel('Path Analysis'),
+        headerPanel('Pathway Analysis'),
         sidebarPanel(
             selectInput('Select', label = h3("Pathway"), choices = mylist, selected = NA)
         ),
